@@ -11,4 +11,3 @@ from . import res_partner
 from . import l10n_py_payment_current
 from . import l10n_py_card
 from . import establishment_point
-from . import product
