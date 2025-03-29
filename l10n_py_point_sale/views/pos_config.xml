@@ -34,6 +34,17 @@
                                         <field name="l10n_py_presence_indicator_id"/>
                                     </div>
                                     
+                                    <div class="row iot_barcode_scanner">
+                                        <label string="Establecimiento (factura)" for="establishment_id" class="col-lg-4 o_light_label"/>
+                                        <field name="establishment_id"/>
+                                    </div>
+
+                                    <div class="row iot_barcode_scanner">
+                                        <label string="Punto de expedicion (factura)" for="expedition_point_id" class="col-lg-4 o_light_label"/>
+                                        <field name="expedition_point_id"/>
+                                    </div>
+                                    
+                                    
                                     
                                     
                                 </div>
