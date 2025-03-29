@@ -51,6 +51,12 @@
                                 
                                 
                             </group>
+                            <group>
+                                <field name="l10n_py_transaction_type_id"/>
+                                <field name="l10n_py_tax_affectation_type"/>
+                                
+                                
+                            </group>
 
                             <group string="Respuesta">
                                 <field name="l10n_py_response" invisible="1" />

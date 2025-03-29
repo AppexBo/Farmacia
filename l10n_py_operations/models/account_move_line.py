@@ -70,9 +70,10 @@ class AccountMoveLine(models.Model):
     
     def get_E735(self):
         amount = 0
+        if self.get_E731() in ['2', '3']:
+            return amount
+        
         if self.get_E731() in ['1','4']:
-            if self.get_E731() in ['2', '3']:
-                return amount
             if self.get_E734() == 10:
                 amount = ( self.get_EA008() * (self.get_E733() / 100)) / 1.1
             if self.get_E734() == 5:
@@ -83,7 +84,7 @@ class AccountMoveLine(models.Model):
                 [EA008* (E733/100)] / 1,1 si la tasa es del 10% 
                 [EA008* (E733/100)] / 1,05 si la tasa es del 5%
             """
-            amount
+            
         return round(amount, 8)
     
     def get_E736(self):
