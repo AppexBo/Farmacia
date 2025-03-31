@@ -12,6 +12,7 @@ import logging
 _logger = logging.getLogger(__name__)
 
 
+
 class AccountMove(models.Model):
     _inherit = ['account.move']    
 
@@ -62,7 +63,7 @@ class AccountMove(models.Model):
     
     def prepare_out_invoice(self):
         if self.l10n_latam_document_type_id:
-            if self.l10n_latam_document_type_id and self.l10n_latam_document_type_id.internal_type == 'invoice':
+            if self.l10n_latam_document_type_id.code == '1' and self.l10n_latam_document_type_id.internal_type == 'invoice':
                 xml_str = self.generate_str_xml_1()
                 _logger.info(xml_str)
                 self.write({'xml_str_format' : xml_str})
@@ -90,19 +91,41 @@ class AccountMove(models.Model):
         str_format += f'<dSisFact>{A005}</dSisFact>'
         #---------------------------------------------------------------
         #---------------------------------------------------------------
-        str_format += self.get_group_B()
+        
+        str_format += '<gOpeDE>'
+        
+        B002, B003 = self.get_B002(), self.get_B003()
+        
+        str_format += f'<iTipEmi>{B002}</iTipEmi>'
+        str_format += f'<dDesTipEmi>{B003}</dDesTipEmi>'
+        
+        B004 = self.get_B004(nit=self.getRUC(),numero_factura=int(self.get_invoice_number()),punto_venta=self.get_PuntExp())
+        str_format += f'<dCodSeg>{B004}</dCodSeg>'
+        str_format += '</gOpeDE>'
         #---------------------------------------------------------------
         #---------------------------------------------------------------
         str_format += self.get_group_C()
         #---------------------------------------------------------------
         #---------------------------------------------------------------
-        str_format += self.get_group_D()
+        str_format += '<gDatGralOpe>'
+        str_format += f'<dFeEmiDE>{self.get_emision_date()}</dFeEmiDE>'
         #---------------------------------------------------------------
+        
+        str_format += self.get_group_D1()
+        #---------------------------------------------------------------
+        str_format += self.get_group_D2()
+        #---------------------------------------------------------------
+        str_format += self.get_group_D3()
+        
+        
+        #---------------------------------------------------------------
+        
+        str_format += '</gDatGralOpe>'
+        
         #---------------------------------------------------------------
         str_format += self.get_group_E()
         #---------------------------------------------------------------
         str_format += self.get_group_F()
-        #---------------------------------------------------------------
         #---------------------------------------------------------------
         
         str_format += '</DE>'
@@ -112,47 +135,21 @@ class AccountMove(models.Model):
         
         return str_format
     
-
-    
-
-    def get_group_B(self):
-        str_format = '<gOpeDE>'
+    def get_group_C(self):
         
-        B002, B003 = self.get_B002(), self.get_B003()
-        
-        str_format += f'<iTipEmi>{B002}</iTipEmi>'
-        str_format += f'<dDesTipEmi>{B003}</dDesTipEmi>'
-        
-        B004 = self.get_B004(nit=self.getRUC(),numero_factura=int(self.get_invoice_number()),punto_venta=self.get_C006())
-        str_format += f'<dCodSeg>{B004}</dCodSeg>'
-
-        B005 = self.get_B005()
-        str_format += f'<dInfoEmi>{B005}</dInfoEmi>'
-
-        B006 = self.get_B006()
-        str_format += f'<dInfoFisc>{B006}</dInfoFisc>'
-        
-        str_format += '</gOpeDE>'
-        return str_format
-    
-    def get_group_C(self) -> str:
-        "XML C. Campos de datos del Timbrado (C001-C099)"
-
         str_format = '<gTimb>'
         
         C002, C003 = self.get_C002(), self.get_C003()
-
         str_format += f'<iTiDE>{C002}</iTiDE>'
         str_format += f'<dDesTiDE>{C003}</dDesTiDE>'
         
         C004 = self.get_C004()
-        
         str_format += f'<dNumTim>{C004}</dNumTim>' 
 
-        C005, C006 = self.get_C005(), self.get_C006()
+        Est, PunExp = self.get_Est(), self.get_PuntExp()
         
-        str_format += f'<dEst>{C005}</dEst>'        
-        str_format += f'<dPunExp>{C006}</dPunExp>'     
+        str_format += f'<dEst>{Est}</dEst>'        
+        str_format += f'<dPunExp>{PunExp}</dPunExp>'     
 
         C007 = self.get_invoice_number(ir_next = True)
         str_format += f'<dNumDoc>{C007}</dNumDoc>'
@@ -161,58 +158,31 @@ class AccountMove(models.Model):
         if C010:
             str_format += f'<dSerieNum>{C010}</dSerieNum>'
 
-        C008 = self.get_C008()
-        C009 = self.get_C009()
-        
-        str_format += f'<dFeIniT>{C008}</dFeIniT>'
-        #str_format += f'<dFeFinT>{C009}</dFeFinT>'
-        
+        str_format += f'<dFeIniT>{self.get_ringing_date()}</dFeIniT>'
         str_format += '</gTimb>'
         return str_format
-    
-    def get_group_D(self) -> str:
-        "XML D. Campos Generales del Documento Electrónico DE (D001-D299)"
-        #---------------------------------------------------------------
-        str_format = '<gDatGralOpe>'
-        str_format += f'<dFeEmiDE>{self.get_emision_date()}</dFeEmiDE>'
-        #---------------------------------------------------------------
+
+    def get_group_D1(self):
+        str_format = '<gOpeCom>'
+        D011 = '1' # PENDIENTE Tipos de transacciones
+        str_format += f'<iTipTra>{D011}</iTipTra>'
         
-        str_format += self.get_group_D1()
-        #---------------------------------------------------------------
-        str_format += self.get_group_D2()
-        #---------------------------------------------------------------
-        str_format += self.get_group_D3()
-        #---------------------------------------------------------------
+        D012 = 'Venta de mercadería'
+        str_format += f'<dDesTipTra>{D012}</dDesTipTra>'
         
-        str_format += '</gDatGralOpe>'
+        D013 = self.get_D013()
+        str_format += f'<iTImp>{D013}</iTImp>'
+        
+        D014 = self.get_D014()
+        str_format += f'<dDesTImp>{D014}</dDesTImp>'
+        
+        D015, D016 = self.get_D015(), self.get_D016()
+        
+        str_format += f'<cMoneOpe>{D015}</cMoneOpe>'
+        str_format += f'<dDesMoneOpe>{D016}</dDesMoneOpe>'
+        str_format += '</gOpeCom>'
+        
         return str_format
-
-    def get_group_D1(self) -> str:
-        "Campos inherentes a la operación comercial (D010-D099)"
-        if self.get_C002() != '7':
-            D010 = '<gOpeCom>'
-
-            D011 = self.get_D011()
-            D010 += f'<iTipTra>{D011}</iTipTra>'
-            
-            D012 = self.get_D012()
-            D010 += f'<dDesTipTra>{D012}</dDesTipTra>'
-            
-            D013 = self.get_D013()
-            
-            D010 += f'<iTImp>{D013}</iTImp>'
-            
-            D014 = self.get_D014()
-            D010 += f'<dDesTImp>{D014}</dDesTImp>'
-            
-            D015, D016 = self.get_D015(), self.get_D016()
-            
-            D010 += f'<cMoneOpe>{D015}</cMoneOpe>'
-            D010 += f'<dDesMoneOpe>{D016}</dDesMoneOpe>'
-            D010 += '</gOpeCom>'
-            
-            return D010
-        return ''
     
     def get_group_D2(self):
         str_format = '<gEmis>'
@@ -341,7 +311,6 @@ class AccountMove(models.Model):
         str_format += '</gDatRec>'
         return str_format
     
-    
     def get_group_E(self):
         str_format = '<gDtipDE>'
         if self.get_C002() == '1':
@@ -419,14 +388,14 @@ class AccountMove(models.Model):
             raise UserError("Esteblezca linea de metodos de pago (PY)")
         return str_format
     
-    def get_invoice_items(self):
-        return self.invoice_line_ids.filtered( lambda line: line.display_type == 'product' and line.product_id )
+    
     
     def get_group_E_8(self):
         str_format = ''
         _C002 = self.get_C002()
         _D013 = self.get_D013()
-        for line in self.get_invoice_items():    
+        for line in self.invoice_line_ids:
+            if line.display_type == 'product':    
                 str_format += '<gCamItem>'
                 
                 E701 = line.get_E701()
