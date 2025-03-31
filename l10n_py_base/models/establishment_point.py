@@ -58,6 +58,11 @@ class ExpeditionPointSequence(models.Model):
 class ExpeditionPoint(models.Model):
     _name = 'expedition.point'
     _description = 'Punto de expedición'
+
+    emision_type_dict = {
+        '1' : 'Normal',
+        '2' : 'Contingencia'
+    }
     
     
     name = fields.Char(
@@ -79,6 +84,15 @@ class ExpeditionPoint(models.Model):
     )
 
     
+    emision_type = fields.Selection(
+        string='Tipo emision',
+        selection= [ (key, value) for key , value in emision_type_dict.items() ],
+        default='1',
+        required=True
+    )
+    
+
+    
     expedition_point_sequence_ids = fields.One2many(
         string='Secuencias de punto de expedición',
         comodel_name='expedition.point.sequence',
@@ -97,6 +111,11 @@ class ExpeditionPoint(models.Model):
             raise UserError(f'No se encontro codigo para el {self._description}: {self.name}')
         return str(self.code).zfill(3) if len(self.code) !=3 else self.code
     
+    def get_emision_code(self):
+        return self.emision_type
+    
+    def get_emision_description(self):
+        return self.emision_type_dict.get(self.emision_type, '')
     
     
     

@@ -54,9 +54,8 @@ class ResPartner(models.Model):
                 if code =='5' and self.get_receiver_nature() == '2':
                     raise UserError(f"Cliente: {self.name}, Tipo de indentificacion Innominado, por favor enviar naturaleza del receptor como: Contribuyente, y Nro Identificacion: 0-0")
                 return code
-            raise UserError(f"Cliente: {self.name}, Tipo de identificacion: FALSE, para tipo de naturaleza: {self.receiver_nature}, Cuando la naturaleza del receptor sea (No contribuyente), se recomienda usar un Tipo de identificacion diferente a (RUC)")
+            raise UserError(f"Cliente: {self.name}, Tipo de identificacion: FALSE, para tipo de naturaleza: {self.receiver_nature}, Cuando la naturaleza del receptor sea (No contribuyente), se recomienda usar un Tipo de identificacion a (RUC)")
         raise UserError(f'Cliente: {self.name}, no se establecio Tipo de identificación')
-
 
     def get_D209(self):
         if self.l10n_latam_identification_type_id:
