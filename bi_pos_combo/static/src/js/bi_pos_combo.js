@@ -29,8 +29,9 @@ patch(PosStore.prototype, {
 					var text_error_erick="";
 					for (var i = 0; i < combo_products.length; i++) {
 						if(combo_products[i]['bi_product_product'][0] == product['id'])
-						{
+						{	debugger
 							combo_products[i]['product_ids'].forEach(function (prod) {
+								debugger
 								var sub_product = self.db.get_product_by_id(prod);
 								if(sub_product){
 									if(combo_products[i]['is_required'])
