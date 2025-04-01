@@ -26,6 +26,7 @@ patch(PosStore.prototype, {
 				var combo_products = self.product_pack;
 				if(combo_products){
 					var existe_algun_producto_sin_categoria=false;
+					var text_error_erick="";
 					for (var i = 0; i < combo_products.length; i++) {
 						if(combo_products[i]['bi_product_product'][0] == product['id'])
 						{
@@ -52,17 +53,18 @@ patch(PosStore.prototype, {
 												}
 											);
 										}
-
+										
 										optional_products.push(sub_product)
 									}
 								}else{
+									text_error_erick += prod;
 									existe_algun_producto_sin_categoria=true;
 								}
 							});
 						}
 					}
 					if(existe_algun_producto_sin_categoria){
-						alert("Por revisa los productos ya que no tiene asignado una categoría.")
+						alert("Por revisa los productos ya que no tiene asignado una categoría."+text_error_erick)
 					}
 				}
 				if(required_products.length > 0 || optional_products.length > 0){
