@@ -57,7 +57,7 @@ patch(PosStore.prototype, {
 										optional_products.push(sub_product)
 									}
 								}else{
-									text_error_erick += prod;
+									text_error_erick += ", " + prod;
 									existe_algun_producto_sin_categoria=true;
 								}
 							});
