@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, models, fields
-from datetime import datetime
+from datetime import datetime, time
 import hashlib
 import pytz
+
 
 from odoo.exceptions import ValidationError, UserError
 
@@ -111,10 +112,21 @@ class PyGroups(models.Model):
         return self.company_id.get_ringing_date_end(to_xml)
     
     def get_emision_date(self):
-        self.write({'l10n_py_emision_date' : self.invoice_date}) #
-        fecha_hora_paraguay = self.l10n_py_emision_date.astimezone(pytz.timezone('America/Asuncion'))
-        return fecha_hora_paraguay.strftime("%Y-%m-%dT%H:%M:%S")
-    
+        tz_paraguay = pytz.timezone('America/Asuncion')
+        now_paraguay = datetime.now(tz_paraguay)
+
+        if self.invoice_date:
+            invoice_date_dt = datetime.combine(self.invoice_date, time(0, 0))
+            invoice_date_paraguay = tz_paraguay.localize(invoice_date_dt, is_dst=None)  
+        else:
+            invoice_date_paraguay = now_paraguay
+
+        emision_datetime = datetime.combine(invoice_date_paraguay.date(), now_paraguay.time())
+
+        self.write({'l10n_py_emision_date': emision_datetime.replace(tzinfo=None)})
+
+        # Retornar en formato ISO 8601
+        return emision_datetime.strftime("%Y-%m-%dT%H:%M:%S")
     
     
 
