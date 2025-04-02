@@ -199,7 +199,7 @@ class PyGroups(models.Model):
     def get_D013(self):
         "Codigo Tipo de afectado"
         if self.l10n_py_tax_affectation_type:
-            return self.l10n_py_tax_affectation_type.code
+            return str(self.l10n_py_tax_affectation_type.code)
         raise UserError("No se encontro un tipo de impuesto afectado en la factura")
     
     def get_D014(self):

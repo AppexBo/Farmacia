@@ -34,19 +34,18 @@ class AccountMoveSend(models.TransientModel):
             content = invoice.get_request_pdf()
             if content:
                 pdf_binary_content = base64.b64decode(content)
-
-                with open("output.pdf", "wb") as pdf_file:
-                    pdf_file.write(pdf_binary_content)
+                # Usamos io.BytesIO en lugar de escribir en disco, esto dado que tenemos un error de escritura en el contenedor
+                # Siempre usar io.BytesIO para generar pdf!
+                pdf_buffer = io.BytesIO(pdf_binary_content)
 
                 invoice_data['pdf_attachment_values'] = {
-                    'raw': pdf_binary_content,
+                    'raw': pdf_buffer.getvalue(),
                     'name': invoice._get_invoice_report_filename(),
                     'mimetype': 'application/pdf',
                     'res_model': invoice._name,
                     'res_id': invoice.id,
-                    'res_field': 'invoice_pdf_report_file', # Binary field
+                    'res_field': 'invoice_pdf_report_file',
                 }
             else:
-                
                 super(AccountMoveSend, self)._prepare_invoice_pdf_report(invoice, invoice_data)
-                
+    
