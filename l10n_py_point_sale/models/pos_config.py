@@ -45,6 +45,18 @@ class PosConfig(models.Model):
     )
 
     
+
+    establishment_id = fields.Many2one(
+        string='Establecimiento',
+        comodel_name='py.establishment',
+    )
+    
+    expedition_point_id = fields.Many2one(
+        string='Punto expedicion',
+        comodel_name='expedition.point'
+    )
+
+    
     def open_ui(self):
         self.validate_payment_method()
         res = super(PosConfig, self).open_ui()

@@ -53,7 +53,15 @@ class AccountMove(models.Model):
 
     l10n_py_transaction_type_id = fields.Many2one(
         string='Tipo transacccion',
-        comodel_name='l10n.py.transaction.type'
+        comodel_name='l10n.py.transaction.type',
+        default= lambda self : self.env.ref('l10n_py_base.l10n_py_transaction_type_1')
+    )
+
+    l10n_py_tax_affectation_type = fields.Many2one(
+        string='Tipo de impuesto afectado',
+        comodel_name='l10n.py.tax.affectation.type',
+        default= lambda self : self.env.ref('l10n_py_base.l10n_py_affectation_1'), 
+        raise_if_not_found=False
     )
 
     

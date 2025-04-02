@@ -64,6 +64,9 @@ class PosOrder(models.Model):
         else:
             raise UserError('No se encontro una configuracion para el tipo de presencia clientes en punto de venta.')
         vals['l10n_py_payments_ids'] = self.get_py_payments_type()
-
+        
+        vals['establishment_id'] = self.config_id.establishment_id.id
+        vals['expedition_point_id'] = self.config_id.expedition_point_id.id
+        
             
         return vals

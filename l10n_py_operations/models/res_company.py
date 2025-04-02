@@ -90,10 +90,10 @@ class ResCompany(models.Model):
             return ringing[0].date_init.strftime("%Y-%m-%d")
         raise UserError(f'La compañia: {self.name}, no se encontro un timbrado establecido')
     
-    def get_ringing_date_end(self):
+    def get_ringing_date_end(self, to_xml = False):
         ringing = self.ringing_ids.filtered(lambda ring: ring.use)
         if ringing:
-            return ringing[0].date_end
+            return ringing[0].date_end.strftime("%Y-%m-%d") if to_xml else ringing[0].date_end
         #raise UserError(f'La compañia: {self.name}, no se encontro un timbrado establecido')
     
     
