@@ -63,19 +63,3 @@ class PosOrderLine(models.Model):
             line.metodo_pago = ', '.join(line.order_id.payment_ids.mapped('payment_method_id.name'))
             line.status = line.order_id.account_move.payment_state
             
-    @api.model
-    def _search(self, domain, offset=0, limit=None, order=None):
-        search_term = self.env.context.get('search_default_search')
-        if search_term:
-            computed_fields = [
-                'sucursal_rep', 'order_rep', 'numero_de_orden_rep', 
-                'numero_de_factura_rep', 'creado_en_rep', 'categoria_producto_rep',
-                'unidad_de_medida_rep', 'reference', 'producto_rep', 'cantidad_rep',
-                'precio_unitario_rep', 'subtotal_sin_tax', 'tax', 'total', 
-                'cajero', 'metodo_pago', 'status'
-            ]
-            search_domain = []
-            for field in computed_fields:
-                search_domain.append((field, 'ilike', search_term))
-            domain = domain + ['|'] * (len(computed_fields) - 1) + search_domain
-        return super()._search(domain, offset=offset, limit=limit, order=order)
