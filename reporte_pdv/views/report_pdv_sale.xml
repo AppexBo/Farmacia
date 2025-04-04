@@ -52,11 +52,6 @@
                 <field name="metodo_pago"/>
                 <field name="status"/>
                 
-                <!-- Filtros adicionales (opcionales) -->
-                <filter string="Pagado" name="filter_paid" domain="[('status','=','paid')]"/>
-                <filter string="Método de Pago" name="filter_metodo_pago" domain="[]">
-                    <field name="metodo_pago"/>
-                </filter>
             </search>
         </field>
     </record>
