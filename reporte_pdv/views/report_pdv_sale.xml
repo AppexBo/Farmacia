@@ -30,12 +30,12 @@
     </record> 
     <!--search-->
     <record id="view_report_pdv_sale_tree_search" model="ir.ui.view">
-        <field name="name">Demo Test Search</field>
+        <field name="name">report.pdv.sale.tree.search</field>
         <field name="model">pos.order.line</field>
         <field name="arch" type="xml">
             <search>
                 <field name="sucursal_rep"/>
-                <field name="order_rep"/>
+                <!--<field name="order_rep"/>
                 <field name="numero_de_orden_rep"/>
                 <field name="numero_de_factura_rep"/>
                 <field name="creado_en_rep"/>
@@ -50,7 +50,7 @@
                 <field name="total"/>
                 <field name="cajero"/>
                 <field name="metodo_pago"/>
-                <field name="status"/>
+                <field name="status"/>-->
                 
             </search>
         </field>
