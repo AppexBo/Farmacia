@@ -63,3 +63,24 @@ class PosOrderLine(models.Model):
             line.metodo_pago = ', '.join(line.order_id.payment_ids.mapped('payment_method_id.name'))
             line.status = line.order_id.account_move.payment_state
             
+    @api.model
+    def _search(self, args, offset=0, limit=None, order=None, count=False, access_rights_uid=None):
+        # Si hay un término de búsqueda en el contexto (buscador por defecto)
+        search_term = self._context.get('search_default_search')
+        if search_term:
+            # Buscar en campos computados
+            domain = []
+            # Lista de campos computados donde quieres buscar
+            computed_fields = [
+                'sucursal_rep', 'order_rep', 'numero_de_orden_rep', 
+                'numero_de_factura_rep', 'creado_en_rep', 'categoria_producto_rep',
+                'unidad_de_medida_rep', 'reference', 'producto_rep', 'cantidad_rep',
+                'precio_unitario_rep', 'subtotal_sin_tax', 'tax', 'total', 
+                'cajero', 'metodo_pago', 'status'
+            ]
+            # Construir el dominio de búsqueda
+            for field in computed_fields:
+                domain.append((field, 'ilike', search_term))
+            # Combinar con los filtros existentes (args)
+            args = args + ['|'] * (len(computed_fields) - 1) + domain
+        return super(PosOrderLine, self)._search(args, offset, limit, order, count, access_rights_uid)
