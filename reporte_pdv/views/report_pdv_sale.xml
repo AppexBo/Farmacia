@@ -35,6 +35,22 @@
         <field name="arch" type="xml">
             <search>
                 <field name="sucursal_rep"/>
+                <field name="order_rep"/>
+                <field name="numero_de_orden_rep"/>
+                <field name="numero_de_factura_rep"/>
+                <field name="creado_en_rep"/>
+                <field name="categoria_producto_rep"/>
+                <field name="unidad_de_medida_rep"/>
+                <field name="reference"/>
+                <field name="producto_rep"/>
+                <field name="cantidad_rep"/>
+                <field name="precio_unitario_rep"/>
+                <field name="subtotal_sin_tax"/>
+                <field name="tax"/>
+                <field name="total"/>
+                <field name="cajero"/>
+                <field name="metodo_pago"/>
+                <field name="status"/>
             </search>
         </field>
     </record>
