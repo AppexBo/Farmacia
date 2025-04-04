@@ -8,23 +8,23 @@ class PosOrderLine(models.Model):
     _inherit = 'pos.order.line'
 
     # Campos calculados que vamos a mostrar en la vista
-    sucursal_rep = fields.Char(string='Sucursal', compute='_compute_order_values', store=False)
-    order_rep = fields.Char(string='Ref de Order', compute='_compute_order_values', store=False)
-    numero_de_orden_rep = fields.Char(string='Numero de orden', compute='_compute_order_values', store=False)
-    numero_de_factura_rep = fields.Char(string='Numero de factura', compute='_compute_order_values', store=False)
-    creado_en_rep = fields.Char(string='Creado en', compute='_compute_order_values', store=False)
-    categoria_producto_rep = fields.Char(string='Categoria del Producto', compute='_compute_order_values', store=False)
-    unidad_de_medida_rep = fields.Char(string='Unidad de Medida', compute='_compute_order_values', store=False)
-    reference = fields.Char(string='Referencia interna', compute='_compute_order_values',store=False)
-    producto_rep = fields.Char(string='Producto', compute='_compute_order_values', store=False)
-    cantidad_rep = fields.Char(string='Cantidad', compute='_compute_order_values', store=False)
-    precio_unitario_rep = fields.Float(string='Precio Unitario', compute='_compute_order_values', store=False)
+    sucursal_rep = fields.Char(string='Sucursal', compute='_compute_order_values', store=True)
+    order_rep = fields.Char(string='Ref de Order', compute='_compute_order_values', store=True)
+    numero_de_orden_rep = fields.Char(string='Numero de orden', compute='_compute_order_values', store=True)
+    numero_de_factura_rep = fields.Char(string='Numero de factura', compute='_compute_order_values', store=True)
+    creado_en_rep = fields.Char(string='Creado en', compute='_compute_order_values', store=True)
+    categoria_producto_rep = fields.Char(string='Categoria del Producto', compute='_compute_order_values', store=True)
+    unidad_de_medida_rep = fields.Char(string='Unidad de Medida', compute='_compute_order_values', store=True)
+    reference = fields.Char(string='Referencia interna', compute='_compute_order_values',store=True)
+    producto_rep = fields.Char(string='Producto', compute='_compute_order_values', store=True)
+    cantidad_rep = fields.Char(string='Cantidad', compute='_compute_order_values', store=True)
+    precio_unitario_rep = fields.Float(string='Precio Unitario', compute='_compute_order_values', store=True)
      #Nuevo
-    subtotal_sin_tax = fields.Float(string='Subtotal', compute='_compute_order_values', store=False)
-    tax = fields.Float(string='Tax', compute='_compute_order_values', store=False)
-    total = fields.Float(string='Total', compute='_compute_order_values', store=False)
-    cajero = fields.Char(string='Cajero',compute='_compute_order_values', store=False)
-    metodo_pago = fields.Char(string='Metodo de Pago',compute='_compute_order_values', store=False)
+    subtotal_sin_tax = fields.Float(string='Subtotal', compute='_compute_order_values', store=True)
+    tax = fields.Float(string='Tax', compute='_compute_order_values', store=True)
+    total = fields.Float(string='Total', compute='_compute_order_values', store=True)
+    cajero = fields.Char(string='Cajero',compute='_compute_order_values', store=True)
+    metodo_pago = fields.Char(string='Metodo de Pago',compute='_compute_order_values', store=True)
     status = fields.Selection( selection=[ 
             ('not_paid', 'Sin pagar'),
             ('in_payment', 'En proceso de pago'),
@@ -36,7 +36,7 @@ class PosOrderLine(models.Model):
     ],
     string='Estado',
     compute='_compute_order_values',
-    store=False
+    store=True
     )
 
 
