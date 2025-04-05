@@ -164,11 +164,10 @@ class RelatedPosStock(models.Model):
 
 		_logger.info("=entro?========================================================================")
 		for product in array:
-			#_logger.info(f"Procesando producto: {product}")
 			try:
 				if item.id == product.get('id'):
 					total_combo_qty += product.get('combo_qty', 0) * product.get('cantidades', 1) 
-					_logger.info(f"Producto {product.get('id')}")
+					_logger.info(f"Procesando producto: {product}")
 					_logger.info(f"Erick - combo_qty {product.get('combo_qty', 0)}")
 					_logger.info(f"Erick - cantidades {product.get('cantidades', 1)}")
 			except Exception as e:
