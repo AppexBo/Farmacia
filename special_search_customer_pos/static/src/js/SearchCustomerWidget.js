@@ -1,4 +1,4 @@
-import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list";
+import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list_screen";
 
 console.log("asd");
 /*import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list_screen";
