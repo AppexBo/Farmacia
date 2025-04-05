@@ -1,43 +1,67 @@
 import { PartnerListScreen } from "@point_of_sale/app/screens/partner_list/partner_list_screen";
+const {PartnerLine} = require("@point_of_sale/app/screens/partner_list/partner_line/partner_line");
 import { patch } from "@web/core/utils/patch";
+import { Component, onMounted, useRef } from "@odoo/owl";
 
 patch(PartnerListScreen.prototype, {
-    /*
-        * Sobreescribe la función de búsqueda por defecto
-        * @param {String} query Término de búsqueda
-        * @returns {Array} Lista de clientes filtrados
-    */
-    searchPartner(query) {
-        console.log("aaaa");
-        // Obtiene la lista completa de clientes
-        const partners = this.env.services.pos.db.get_partners_sorted();
-        
-        if (!query || query.trim() === '') {
-            return partners;
+    get partners() {
+        console.log("[Erick] partners - query:", this.state.query || "(vacía)"); // Único console.log añadido
+        let res;
+        if (this.state.query && this.state.query.trim() !== "") {
+            res = this.pos.db.search_partner(this.state.query.trim());
+        } else {
+            res = this.pos.db.get_partners_sorted(1000);
         }
-        
-        query = query.toLowerCase().trim();
-        
-        // Implementación personalizada de búsqueda
-        return partners.filter(partner => {
-            // Buscar en nombre, referencia, teléfono, email, etc.
-            return (
-                (partner.name && partner.name.toLowerCase().includes(query)) ||
-                (partner.ref && partner.ref.toLowerCase().includes(query)) ||
-                (partner.phone && partner.phone.toLowerCase().includes(query)) ||
-                (partner.mobile && partner.mobile.toLowerCase().includes(query)) ||
-                (partner.email && partner.email.toLowerCase().includes(query)) ||
-                (partner.vat && partner.vat.toLowerCase().includes(query))
-            );
+        res.sort(function(a, b) {
+            return (a.name || "").localeCompare(b.name || "");
         });
+        if (this.state.selectedPartner) {
+            const indexOfSelectedPartner = res.findIndex( (partner) => partner.id === this.state.selectedPartner.id);
+            if (indexOfSelectedPartner !== -1) {
+                res.splice(indexOfSelectedPartner, 1);
+            }
+            res.unshift(this.state.selectedPartner);
+        }
+        return res;
     },
-    
-    /**
-     * Opcional: También puedes modificar cómo se muestra cada elemento
-     */
-    get partnerLineComponents() {
-        // Implementación personalizada si necesitas cambiar cómo se muestran los clientes
-        return super.partnerLineComponents;
+
+    _clearSearch() {
+        console.log("[Erick] _clearSearch ejecutado"); // Único console.log añadido
+        this.searchWordInputRef.el.value = "";
+        this.state.query = "";
+    },
+
+    async searchPartner() {
+        console.log("[Erick] searchPartner - query:", this.state.query); // Único console.log añadido
+        if (this.state.previousQuery != this.state.query) {
+            this.state.currentOffset = 0;
+        }
+        const result = await this.getNewPartners();
+        this.pos.addPartners(result);
+        if (this.state.previousQuery == this.state.query) {
+            this.state.currentOffset += result.length;
+        } else {
+            this.state.previousQuery = this.state.query;
+            this.state.currentOffset = result.length;
+        }
+        return result;
+    },
+
+    async getNewPartners() {
+        console.log("[Erick] getNewPartners - query:", this.state.query); // Único console.log añadido
+        let domain = [];
+        const limit = 30;
+        if (this.state.query) {
+            const search_fields = ["name", "parent_name", "phone", "mobile", "email", "barcode", "street", "zip", "city", "state_id", "country_id", "vat", ];
+            domain = [...Array(search_fields.length - 1).fill('|'), ...search_fields.map(field => [field, "ilike", this.state.query + "%"])];
+        }
+        const result = await this.orm.silent.call("pos.session", "get_pos_ui_res_partner_by_params", 
+            [odoo.pos_session_id], {
+            domain,
+            limit: limit,
+            offset: this.state.currentOffset
+        });
+        return result;
     }
 });
 
