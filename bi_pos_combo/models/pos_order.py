@@ -162,14 +162,14 @@ class RelatedPosStock(models.Model):
 		array = json.loads(cadena)
 		total_combo_qty = 0
 
-		_logger.info("=entro?========================================================================")
+		#_logger.info("=entro?========================================================================")
 		for product in array:
 			try:
 				if item.id == product.get('id'):
 					total_combo_qty += product.get('combo_qty', 0) * product.get('cantidades', 1) 
-					_logger.info(f"Procesando producto: {product}")
-					_logger.info(f"Erick - combo_qty {product.get('combo_qty', 0)}")
-					_logger.info(f"Erick - cantidades {product.get('cantidades', 1)}")
+					#_logger.info(f"Procesando producto: {product}")
+					#_logger.info(f"Erick - combo_qty {product.get('combo_qty', 0)}")
+					#_logger.info(f"Erick - cantidades {product.get('cantidades', 1)}")
 			except Exception as e:
 				_logger.error(f"Error al obtener el campo {field_name}: {e}")
 		#_logger.info("=aa========================================================================")
