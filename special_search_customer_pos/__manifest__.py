@@ -17,4 +17,9 @@
 	"data": [
         #'views/report_pdv_sale.xml'
 	],
+	'assets': {
+		'point_of_sale._assets_pos': [
+            "special_search_customer_pos/static/src/js/SearchCustomerWidget.js",
+		],
+	},
 }
