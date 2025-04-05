@@ -3,7 +3,7 @@ import { patch } from "@web/core/utils/patch";
 import { Component, onMounted, useRef } from "@odoo/owl";
 
 patch(PartnerListScreen.prototype, {
-    get partners() {
+    /*get partners() {
         console.log("[Erick] partners - query:", this.state.query || "(vacía)"); // Único console.log añadido
         let res;
         if (this.state.query && this.state.query.trim() !== "") {
@@ -61,7 +61,7 @@ patch(PartnerListScreen.prototype, {
             offset: this.state.currentOffset
         });
         return result;
-    }
+    }*/
 });
 
 
