@@ -256,7 +256,7 @@ class RelatedPosStock(models.Model):
 						], limit=1)
 						
 						if existing_move:
-							#_logger.info("existe")
+							_logger.info("existe")
 						else:
 							current_move = current_move.create(
 								prepared_vals
